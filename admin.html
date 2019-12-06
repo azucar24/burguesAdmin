@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <!--script>
+    firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        window.location.href = "admin.html";
+    } else {
+        window.location.href = "login.html";
+    }
+});
+    </script-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Burguès - Dashboard</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/datepicker3.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+
+    <!--Custom Font-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!--script de firebse-->
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"> </script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"> </script>
+
+   
+
+</head>
+
+<body>
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse"><span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span></button>
+                <a class="navbar-brand" href="#"><span>Burguès</span>Admin</a>
+                <ul class="nav navbar-top-links navbar-right">
+
+                </ul>
+            </div>
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+        <div class="profile-sidebar">
+            <div class="profile-userpic">
+                <img src="imagen/images.png" class="img-responsive" alt="">
+            </div>
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name">Username</div>
+                <div class="profile-usertitle-status"><span class="indicator label-success"></span>Online</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="divider"></div>
+        <ul class="nav menu">
+            <li class="active"><a href="admin.html"><em class="fa fa-dashboard">&nbsp;</em> Dashboard</a></li>
+            <li><a href="reservaciones.html"><em class="fa fa-calendar">&nbsp;</em> Reservaciones</a></li>
+            <li><a href="clientes.html"><em class="fa fa-users">&nbsp;</em> Clientes</a></li>
+            <li><a href="empleados.html"><em class="fa fa-address-card">&nbsp;</em> Empleados</a></li>
+            <li><a href="Gerentes.html"><em class="fa fa-address-book-o">&nbsp;</em> Gerentes</a></li>
+            <li class="parent "><a data-toggle="collapse" href="#sub-item-1">
+                    <em class="fa fa-navicon">&nbsp;</em> Màs Opciones <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
+                </a>
+                <ul class="children collapse" id="sub-item-1">
+                    <li><a href="menus.html"><em class="fa fa-cutlery">&nbsp;</em> Menús</a></li>
+                    <li><a href="sucursales.html"><em class="fa fa-map-marker">&nbsp;</em> Sucursales</a></li>
+                    <li><a href="pedidos.html"><em class="fa fa-shopping-basket">&nbsp;</em> Compras<i id="pedidos" class="btn btn-md btn-warning"></i></a></li>
+                    <li><a href="proveedores.html"><em class="fa fa-truck">&nbsp;</em> Proveedores</a></li>
+                    <li><a href="comentarios.html"><em class="fa fa-comments">&nbsp;</em> Comentarios</a></li>
+                    <li><a href="reportes.html"><em class="fa fa-clone">&nbsp;</em> Reportes</a></li>
+                </ul>
+            </li>
+            <li><a onclick="logout"><em class="fa fa-sign-out">&nbsp;</em> Logout</a></li>
+        </ul>
+    </div>
+    <!--/.sidebar-->
+
+    <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+        <div class="row">
+            <ol class="breadcrumb">
+                <li><a href="#">
+                        <em class="fa fa-home"></em>
+                    </a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </div>
+        <!--/.row-->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Dashboard</h1>
+            </div>
+        </div>
+        <!--/.row-->
+
+        <div class="panel panel-container">
+            <div class="row">
+                <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                    <div class="panel panel-teal panel-widget border-right">
+                        <div class="row no-padding"><em class="fa fa-xl fa-calendar color-blue"></em>
+                            <div class="large">
+                                <h3 id="reser"></h3>
+                            </div>
+                            <div class="text-muted"> Reservaciones</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                    <div class="panel panel-blue panel-widget border-right">
+                        <div class="row no-padding"><em class="fa fa-xl fa-comments color-orange"></em>
+                            <div class="large">
+                                <h3 id=" comentariosclientes"></h3>
+                            </div>
+                            <div class="text-muted">Comentarios</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                    <div class="panel panel-orange panel-widget border-right">
+                        <div class="row no-padding"><em class="fa fa-xl fa-cutlery color-teal"></em>
+                            <div class="large">
+                                <h3 id="usuariosclientes"></h3>
+                            </div>
+                            <div class="text-muted"> Ordenes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                    <div class="panel panel-red panel-widget ">
+                        <div class="row no-padding"><em class="fa fa-xl fa-address-card color-red"></em>
+                            <div class="large">
+                                <h3 id="emplead"></h3>
+                            </div>
+                            <div class="text-muted">Empleados</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/.row-->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="alert bg-teal" role="alert"><em class="fa fa-lg <fa-welcome></fa-welcome>">&nbsp;</em> Bienvienido al panel de Administraciòn de Burguès <a href="#" class="pull-right"></a></div>
+            </div>
+        </div>
+        <!--/.row-->
+    </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-12">
+        <p class="back-link">Burguès by <a href="">Developerslocos</a></p>
+    </div>
+    </div>
+    <!--/.row-->
+    </div>
+    <!--/.main-->
+
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/chart.min.js"></script>
+    <script src="js/chart-data.js"></script>
+    <script src="js/easypiechart.js"></script>
+    <script src="js/easypiechart-data.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/custom.js"></script>
+
+    <script src="process/app.js"></script>
+    <script src="process/logout.js"></script>
+
+
+
+</body>
+
+</html>

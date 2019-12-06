@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Burguès - Dashboard</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/datepicker3.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="tables/pedidos.css" rel="stylesheet">
+
+    <!--Custom Font-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $("#btnPrint").live("click", function() {
+            var divContents = $("#dvContainer").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title>BURGUEST REPORTE DE COMPRA</title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        });
+
+    </script>
+
+
+    <!--script de firebse-->
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"> </script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"> </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse"><span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span></button>
+                <a class="navbar-brand" href="#"><span>Burguès</span>Admin</a>
+                <ul class="nav navbar-top-links navbar-right">
+
+                </ul>
+            </div>
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+        <div class="profile-sidebar">
+            <div class="profile-userpic">
+                <img src="imagen/images.png" class="img-responsive" alt="">
+            </div>
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name">Username</div>
+                <div class="profile-usertitle-status"><span class="indicator label-success"></span>Online</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="divider"></div>
+        <ul class="nav menu">
+            <li class="active"><a href="admin.html"><em class="fa fa-dashboard">&nbsp;</em> Dashboard</a></li>
+            <li><a href="reservaciones.html"><em class="fa fa-calendar">&nbsp;</em> Reservaciones</a></li>
+            <li><a href="clientes.html"><em class="fa fa-users">&nbsp;</em> Clientes</a></li>
+            <li><a href="empleados.html"><em class="fa fa-address-card">&nbsp;</em> Empleados</a></li>
+            <li><a href="Gerentes.html"><em class="fa fa-address-book-o">&nbsp;</em> Gerentes</a></li>
+            <li class="parent "><a data-toggle="collapse" href="#sub-item-1">
+                    <em class="fa fa-navicon">&nbsp;</em> Màs Opciones <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
+                </a>
+                <ul class="children collapse" id="sub-item-1">
+                    <li><a href="menus.html"><em class="fa fa-cutlery">&nbsp;</em> Menús</a></li>
+                    <li><a href="sucursales.html"><em class="fa fa-map-marker">&nbsp;</em> Sucursales</a></li>
+                    <li><a href="pedidos.html"><em class="fa fa-shopping-basket">&nbsp;</em> Compras <i id="pedidos" class="btn btn-md btn-warning"></i></a></li>
+                    <li><a href="proveedores.html"><em class="fa fa-truck">&nbsp;</em> Proveedores</a></li>
+                    <li><a href="comentarios.html"><em class="fa fa-comments">&nbsp;</em> Comentarios</a></li>
+                    <li><a href="reportes.html"><em class="fa fa-clone">&nbsp;</em> Reportes</a></li>
+                </ul>
+            </li>
+            <li><a href="login.html"><em class="fa fa-sign-out">&nbsp;</em> Logout</a></li>
+        </ul>
+    </div>
+    <!--/.sidebar-->
+
+    <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+        <div class="row">
+            <ol class="breadcrumb">
+                <li><a href="#">
+                        <em class="fa fa-home"></em>
+                    </a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </div>
+        <!--/.row-->
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Pedidos de Productos de Cocina.</h1>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#registrarEmpleado"><span class="icon-add-user"></span>Agregar Ingredientes</button>
+        </div>
+        <form id="form1">
+            <div id="dvContainer">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sucursal</th>
+                            <th>Pedido</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>proveedor</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductos">
+
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
+
+        <!--/.col-->
+        <div class="col-sm-12">
+            <p class="back-link">Burguès by <a href="">Developerslocos</a></p>
+        </div>
+
+        <div class="modal fade" id="registrarEmpleado" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalScrollableTitle">Registrar Un Nuevo Gerente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form class="form-horizontal" id="form" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <div class="col-sm-9">
+                                        <label for="">Sucursal</label>
+                                        <select id="sucursal" class="form-control" name="sucursal" required="">
+                                            <option selected="true" hidden="true" value="" disabled>-- sucursal --
+                                            </option>
+
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-9">
+                                        <label for="">Descripcion de los productos</label>
+                                        <input type="text" id="descripcion" name="descripcion" class="form-control" placeholder="Descripcion">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-9">
+                                        <label for="">Sucursal</label>
+                                        <select id="proveedor" class="form-control" name="proveedor" required="">
+                                            <option selected="true" hidden="true" value="" disabled>-- Proveedor --
+                                            </option>
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-9">
+                                        <button type="button" id="boton" onclick="RegistrarProductos();" class="btn btn-primary">Registrar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/jquery-1.11.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/chart.min.js"></script>
+        <script src="js/chart-data.js"></script>
+        <script src="js/easypiechart.js"></script>
+        <script src="js/easypiechart-data.js"></script>
+        <script src="js/bootstrap-datepicker.js"></script>
+        <script src="js/custom.js"></script>
+
+
+        <script src="process/inventario.js"></script>
+
+
+</body>
+
+</html>
